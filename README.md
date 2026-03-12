@@ -72,9 +72,9 @@ src/
 All data is stored locally in your browser via `localStorage`. Nothing is sent to any server. Use the **BACKUP** button in Statistics to export a JSON snapshot of your data.
 
 ---
-##Credits 
+## Credits 
 
-Icons From https://github.com/lucide-icons/lucide
+Icons From [Lucide Icons](https://github.com/lucide-icons/lucide)
 ---
 ## License
 
