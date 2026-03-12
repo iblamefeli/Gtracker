@@ -75,6 +75,7 @@ All data is stored locally in your browser via `localStorage`. Nothing is sent t
 ## Credits 
 
 Icons From [Lucide Icons](https://github.com/lucide-icons/lucide)
+
 ---
 ## License
 
