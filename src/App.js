@@ -807,11 +807,10 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(()=>{ saveLS("gt_long",customLong);   if(!running&&mode===MODES.LONG)  setTimeLeft(customLong*T);  },[customLong]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(()=>{
     if(subjects.length>0&&!selectedSubject) setSelectedSubject(subjects[0]);
     if(selectedSubject&&!subjects.find(s=>s.id===selectedSubject.id)) setSelectedSubject(subjects[0]||null);
-  },[subjects]);
+  },[subjects, selectedSubject]);
 
   // close settings on outside click
   useEffect(()=>{
