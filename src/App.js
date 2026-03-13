@@ -8,13 +8,12 @@ import {
   Heart, Home, Layout, Map, Moon, Star, Sun, User, Wind,
   Edit2, Trash2, Copy, Download, ExternalLink, Sigma, Infinity,
   Triangle, Square, Circle, Hexagon, GitBranch, Thermometer,
-  Radio, Magnet, Waves, Binary, Pi, IterationCw, Maximize2,Server,
-  TableProperties, DraftingCompass, Cone, Blocks,Cctv, Github, Gitlab,
+  Radio, Magnet, Waves, Binary, Pi, IterationCw, Maximize2
 } from "lucide-react";
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const MODES = { FOCUS:"FOCUS", SHORT:"SHORT BREAK", LONG:"LONG BREAK" };
-const DEBUG_MODE = false; // set false for production — true = timer in seconds not minutes
+const DEBUG_MODE = true; // set false for production — true = timer in seconds not minutes
 const T = DEBUG_MODE ? 1 : 60; // multiplier
 const PRESET_COLORS = ["#FF4D4D","#FF8C42","#FFD700","#4ECDC4","#45B7D1","#3498DB","#9B59B6","#96CEB4","#F7C59F","#E91E63","#FF69B4","#FF1493","#CC0000","#39FF14","#F0F0F0"];
 const DAYS          = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -52,19 +51,16 @@ const LUCIDE_ICONS = [
   {name:"Radio",      C:Radio},      {name:"Magnet",    C:Magnet},
   {name:"Waves",      C:Waves},      {name:"Binary",    C:Binary},
   {name:"Pi",         C:Pi},         {name:"IterationCw",C:IterationCw},
-  {name:"Maximize2",  C:Maximize2},  {name:"Server" ,C:Server},
-  {name:"TableProperties" ,C:TableProperties}, {name:"DraftingCompass" ,C:DraftingCompass},
-  {name:"Cone" ,C:Cone}, {name:"Blocks" ,C:Blocks}, {name:"Cctv", C:Cctv}, 
-  {name:"Github" ,C:Github}, {name:"Gitlab", C:Gitlab},
+  {name:"Maximize2",  C:Maximize2},
 ];
 
 const ACCENT_THEMES = [
-  { name:"Red",       primary:"#f81a1a", secondary:"#fa7928" },
+  { name:"Red",       primary:"#FF4D4D", secondary:"#FF8C42" },
   { name:"Teal",      primary:"#3DFFD4", secondary:"#45B7D1" },
-  { name:"Purple",    primary:"#9a4acf", secondary:"#e436cd" },
+  { name:"Purple",    primary:"#9B59B6", secondary:"#E91E63" },
   { name:"Blue",      primary:"#3498DB", secondary:"#4ECDC4" },
   { name:"Gold",      primary:"#FFD700", secondary:"#FF8C42" },
-  { name:"Green",     primary:"#89c9ab", secondary:"#4ECDC4" },
+  { name:"Green",     primary:"#96CEB4", secondary:"#4ECDC4" },
   { name:"Pink",      primary:"#FF69B4", secondary:"#FF1493" },
   { name:"Mono",      primary:"#E8E8E0", secondary:"#888888" },
   { name:"Matrix",    primary:"#00FF41", secondary:"#00FF41", matrix:true },
@@ -491,15 +487,6 @@ function NotesEditor({ accent, theme }) {
     }
   };
 
-  const handleCopy = () => {
-    const text = lines.map(l=>{
-      const indent = l.indent;
-      if(indent===0) return `• ${l.text}`;
-      return `${"  ".repeat(indent)}${indent}. ${l.text}`;
-    }).join("\n");
-    navigator.clipboard.writeText(text).catch(()=>{});
-  };
-
   const indentColors = ["#2A2A2A", accent+"88", accent+"55", accent+"33", accent+"22"];
 
   const PUNCT_SET_N = new Set([...`:;'"}][{)(-+=\\|/?.><,*!@#$%^&`]);
@@ -708,7 +695,7 @@ function Confetti({ active, colors, matrix }) {
     };
     draw();
     return ()=>cancelAnimationFrame(frame);
-  },[active]);
+  },[active, colors, matrix]);
 
   if(!active) return null;
   return <canvas ref={canvasRef} style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:999}}/>;
@@ -808,10 +795,14 @@ export default function App() {
   useEffect(()=>{ saveLS("gt_log",sessionLog); },[sessionLog]);
   useEffect(()=>{ saveLS("gt_theme",themeIdx); },[themeIdx]);
   useEffect(()=>{ saveLS("gt_font",fontIdx); },[fontIdx]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(()=>{ saveLS("gt_focus",customFocus); if(!running&&mode===MODES.FOCUS) setTimeLeft(customFocus*T); },[customFocus]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(()=>{ saveLS("gt_short",customShort); if(!running&&mode===MODES.SHORT) setTimeLeft(customShort*T); },[customShort]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(()=>{ saveLS("gt_long",customLong);   if(!running&&mode===MODES.LONG)  setTimeLeft(customLong*T);  },[customLong]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(()=>{
     if(subjects.length>0&&!selectedSubject) setSelectedSubject(subjects[0]);
     if(selectedSubject&&!subjects.find(s=>s.id===selectedSubject.id)) setSelectedSubject(subjects[0]||null);
@@ -1245,9 +1236,9 @@ export default function App() {
               <div style={{...S.card}}>
                 <div style={{...S.label,color:theme.primary}}>TIMER SETTINGS</div>
                 {[
-                  {label:"Focus",      val:customFocus, set:setCustomFocus, min:5,  max:120},
-                  {label:"Short Break",val:customShort, set:setCustomShort, min:5,  max:20},
-                  {label:"Long Break", val:customLong,  set:setCustomLong,  min:5, max:60},
+                  {label:"Focus",      val:customFocus, set:setCustomFocus, min:1,  max:90},
+                  {label:"Short Break",val:customShort, set:setCustomShort, min:1,  max:20},
+                  {label:"Long Break", val:customLong,  set:setCustomLong,  min:1, max:60},
                 ].map(cfg=>(
                   <div key={cfg.label} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"12px"}}>
                     <div style={{fontSize:"11px",color:"#666"}}>{cfg.label}</div>
@@ -1642,7 +1633,7 @@ export default function App() {
         </div>
       )}
 
-      <Confetti active={showConfetti} colors={[theme.primary, theme.secondary, theme.primary+"99", theme.secondary+"99"]} matrix={!!theme.matrix}/>
+      <Confetti active={showConfetti} colors={[theme.primary, theme.secondary, "#fff", "#FFD700", theme.primary+"99"]} matrix={!!theme.matrix}/>
 
       {/* ⏳ ZA WARUDO overlay */}
       {zaWarudo && (
